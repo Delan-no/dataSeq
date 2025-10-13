@@ -6,11 +6,13 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated } = useAuth();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/signin" replace />;
-  }
-
+  // Temporairement désactivé - accès libre à toutes les pages
   return <>{children}</>;
+  
+  // Code original (à réactiver plus tard pour la connexion obligatoire)
+  // const { isAuthenticated } = useAuth();
+  // if (!isAuthenticated) {
+  //   return <Navigate to="/signin" replace />;
+  // }
+  // return <>{children}</>;
 } 
