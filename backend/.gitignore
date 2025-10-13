@@ -1,0 +1,11 @@
+.env
+.env.development
+.env.production
+node_modules/
+./error-*
+./access-*
+./*-audit.json
+./*.log
+./storage/serverLogger
+storage/serverLogger/
+.qodo

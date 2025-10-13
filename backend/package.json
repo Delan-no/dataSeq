@@ -1,0 +1,62 @@
+{
+  "name": "student-management-backend",
+  "version": "1.0.0",
+  "description": "Outil de suivi des tâches pour les dévéloppeurs de logiciels et applications",
+  "main": "index.js",
+  "scripts": {
+    "serve": "nodemon --trace-warnings index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/team-devmanager/devmanager-app-backend.git"
+  },
+  "keywords": [
+    "Développeurs-Management"
+  ],
+  "author": "VIPP Digital Services",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/team-devmanager/devmanager-app-backend/issues"
+  },
+  "homepage": "https://gitlab.com/team-devmanager/devmanager-app-backend#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^1.20.3",
+    "compression": "^1.7.5",
+    "connect-mongodb-session": "^2.2.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "csv-parser": "^3.2.0",
+    "dotenv": "^16.4.7",
+    "errorhandler": "^1.5.1",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "ldap-authentication": "^3.0.3",
+    "ldapjs": "^3.0.7",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.9.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.1",
+    "nodemon": "^3.1.9",
+    "passport": "^0.7.0",
+    "passport-custom": "^1.1.1",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "ps-tree": "^1.2.0",
+    "pug": "^3.0.3",
+    "uuid": "^9.0.1",
+    "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "ws": "^8.18.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

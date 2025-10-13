@@ -1,0 +1,12 @@
+{
+  "watch": [
+    "."
+  ],
+  "ext": "*",
+  "ignore": [
+    "node_modules"
+  ],
+  "events": {
+    "restart": "node pre-restart.js"
+  }
+}
