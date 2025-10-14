@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useToastContext } from '../ui/ToastProvider';
 
 interface SequenceInputProps {
   onAddNumber: (num: number) => void;
@@ -8,6 +9,7 @@ interface SequenceInputProps {
 
 export default function SequenceInput({ onAddNumber, onReset, disabled }: SequenceInputProps) {
   const [inputValue, setInputValue] = useState('');
+  const { success, error } = useToastContext();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,7 +17,15 @@ export default function SequenceInput({ onAddNumber, onReset, disabled }: Sequen
     if (!isNaN(num)) {
       onAddNumber(num);
       setInputValue('');
+      success(`Nombre ${num} ajouté avec succès !`);
+    } else {
+      error('Veuillez entrer un nombre valide');
     }
+  };
+
+  const handleReset = () => {
+    onReset();
+    success('Séquence réinitialisée avec succès !');
   };
 
   return (
@@ -56,7 +66,7 @@ export default function SequenceInput({ onAddNumber, onReset, disabled }: Sequen
           
           <button
             type="button"
-            onClick={onReset}
+            onClick={handleReset}
             disabled={disabled}
             className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-shrink-0"
           >

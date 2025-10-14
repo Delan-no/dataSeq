@@ -8,11 +8,13 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import SequencesPage from "./pages/Sequences/SequencesPage";
 import { AuthProvider } from "./context/AuthContext";
+import ToastProvider from "./components/ui/ToastProvider";
 
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
+      <ToastProvider>
+        <Router>
         <ScrollToTop />
         <Routes>
           {/* Dashboard Layout */}
@@ -29,7 +31,8 @@ export default function App() {
           {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
+        </Router>
+      </ToastProvider>
     </AuthProvider>
   );
 }

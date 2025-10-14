@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useToastContext } from './ToastProvider';
 
 interface FloatingAction {
   icon: React.ReactNode;
@@ -13,6 +14,19 @@ interface FloatingActionButtonProps {
 
 export default function FloatingActionButton({ actions }: FloatingActionButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { success } = useToastContext();
+
+  const handleActionClick = (action: FloatingAction) => {
+    action.onClick();
+    setIsOpen(false);
+    
+    // Notification selon le type d'action
+    if (action.label.includes('Nouvelle')) {
+      success('Nouvelle séquence créée !');
+    } else if (action.label.includes('Réinitialiser')) {
+      success('Séquence réinitialisée !');
+    }
+  };
 
   return (
     <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50">
@@ -29,10 +43,7 @@ export default function FloatingActionButton({ actions }: FloatingActionButtonPr
               {action.label}
             </div>
             <button
-              onClick={() => {
-                action.onClick();
-                setIsOpen(false);
-              }}
+              onClick={() => handleActionClick(action)}
               className={`w-10 h-10 sm:w-12 sm:h-12 ${action.color} text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110 flex items-center justify-center`}
             >
               <div className="w-4 h-4 sm:w-5 sm:h-5">

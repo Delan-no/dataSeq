@@ -26,9 +26,9 @@ export default function VirtualizedList({
         {items.map((num, index) => (
           <div
             key={index}
-            className={`group relative px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 flex-shrink-0 ${
+            className={`group relative px-3 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 flex-shrink-0 ${
               isSearchedNumber(num)
-                ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white ring-1 sm:ring-2 ring-yellow-300 animate-pulse'
+                ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white ring-2 ring-yellow-300 animate-pulse'
                 : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
             }`}
           >

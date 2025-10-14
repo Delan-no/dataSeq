@@ -51,7 +51,7 @@ export default function SearchResults({ searchValue, results }: SearchResultsPro
                   {result.subsequence.map((num, index) => (
                     <div
                       key={index}
-                      className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex-shrink-0 ${
+                      className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex-shrink-0 ${
                         index === 0
                           ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg transform scale-110'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'

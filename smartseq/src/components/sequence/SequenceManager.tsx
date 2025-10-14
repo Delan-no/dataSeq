@@ -6,6 +6,10 @@ interface Sequence {
   updatedAt: Date;
 }
 
+import { useState } from 'react';
+import { useToastContext } from '../ui/ToastProvider';
+import ConfirmDialog from '../ui/ConfirmDialog';
+
 interface SequenceManagerProps {
   sequences: Sequence[];
   currentSequenceId: number;
@@ -21,6 +25,10 @@ export default function SequenceManager({
   onCreateSequence,
   onDeleteSequence
 }: SequenceManagerProps) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [sequenceToDelete, setSequenceToDelete] = useState<number | null>(null);
+  const { success, error } = useToastContext();
+
   const handleCreate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -28,7 +36,34 @@ export default function SequenceManager({
     if (name?.trim()) {
       onCreateSequence(name.trim());
       e.currentTarget.reset();
+      success(`Séquence "${name.trim()}" créée avec succès !`);
+    } else {
+      error('Veuillez entrer un nom pour la séquence');
     }
+  };
+
+  const handleDeleteClick = (sequenceId: number) => {
+    if (sequences.length <= 1) {
+      error('Impossible de supprimer la dernière séquence');
+      return;
+    }
+    setSequenceToDelete(sequenceId);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (sequenceToDelete) {
+      const sequenceName = sequences.find(seq => seq.id === sequenceToDelete)?.name;
+      onDeleteSequence(sequenceToDelete);
+      success(`Séquence "${sequenceName}" supprimée avec succès !`);
+    }
+    setShowDeleteConfirm(false);
+    setSequenceToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirm(false);
+    setSequenceToDelete(null);
   };
 
   return (
@@ -54,7 +89,7 @@ export default function SequenceManager({
           </select>
           
           <button
-            onClick={() => onDeleteSequence(currentSequenceId)}
+            onClick={() => handleDeleteClick(currentSequenceId)}
             disabled={sequences.length <= 1}
             className="bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none flex-shrink-0"
           >
@@ -114,6 +149,17 @@ export default function SequenceManager({
           </div>
         </div>
       </div>
+      
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        title="Supprimer la séquence"
+        message={`Êtes-vous sûr de vouloir supprimer la séquence "${sequences.find(seq => seq.id === sequenceToDelete)?.name}" ? Cette action est irréversible.`}
+        confirmText="Supprimer"
+        cancelText="Annuler"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        type="danger"
+      />
     </div>
   );
 }
