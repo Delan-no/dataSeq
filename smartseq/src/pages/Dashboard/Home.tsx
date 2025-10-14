@@ -2,12 +2,13 @@ import { useState } from "react";
 import PageMeta from "../../components/common/PageMeta";
 import { useIndexedDB } from "../../hooks/useIndexedDB";
 import SequenceInput from "../../components/sequence/SequenceInput";
-import SequenceDisplay from "../../components/sequence/SequenceDisplay";
+import OptimizedSequenceDisplay from "../../components/sequence/OptimizedSequenceDisplay";
 import SequenceManager from "../../components/sequence/SequenceManager";
 import SearchBar from "../../components/search/SearchBar";
 import SearchResults from "../../components/search/SearchResults";
 import GradientBackground from "../../components/ui/GradientBackground";
 import FloatingActionButton from "../../components/ui/FloatingActionButton";
+
 
 export default function Home() {
   const { 
@@ -55,51 +56,54 @@ export default function Home() {
       />
       
       <GradientBackground>
-        <div className="container mx-auto px-4 py-8">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-              SmartSeq
-            </h1>
-            <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-              Gérez vos séquences numériques avec élégance et efficacité
-            </p>
-          </div>
-
-          {/* Layout principal */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Colonne gauche - Contrôles */}
-            <div className="lg:col-span-1 space-y-6">
-              <SequenceManager
-                sequences={sequences}
-                currentSequenceId={currentSequenceId}
-                onSequenceChange={setCurrentSequenceId}
-                onCreateSequence={createSequence}
-                onDeleteSequence={deleteSequence}
-              />
-              
-              <SequenceInput
-                onAddNumber={addNumber}
-                onReset={handleReset}
-              />
-              
-              <SearchBar
-                onSearch={handleSearch}
-                placeholder="Rechercher un nombre..."
-              />
+        <div className="min-h-screen w-full overflow-x-hidden">
+          <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8 max-w-7xl">
+            {/* Header */}
+            <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2 sm:mb-4">
+                SmartSeq
+              </h1>
+              <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-300 max-w-xl lg:max-w-2xl mx-auto px-4">
+                Gérez vos séquences numériques avec élégance et efficacité
+              </p>
             </div>
 
-            {/* Colonne droite - Affichage */}
-            <div className="lg:col-span-2 space-y-6">
-              <SequenceDisplay
-                sequence={currentSequence}
-                title={currentSequenceName}
-              />
-              
-              <SearchResults
-                searchValue={searchValue}
-                results={searchResults}
-              />
+            {/* Layout principal */}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {/* Colonne gauche - Contrôles */}
+              <div className="xl:col-span-1 space-y-4 sm:space-y-6">
+                <SequenceManager
+                  sequences={sequences}
+                  currentSequenceId={currentSequenceId}
+                  onSequenceChange={setCurrentSequenceId}
+                  onCreateSequence={createSequence}
+                  onDeleteSequence={deleteSequence}
+                />
+                
+                <SequenceInput
+                  onAddNumber={addNumber}
+                  onReset={handleReset}
+                />
+                
+                <SearchBar
+                  onSearch={handleSearch}
+                  placeholder="Rechercher un nombre..."
+                />
+              </div>
+
+              {/* Colonne droite - Affichage */}
+              <div className="xl:col-span-2 space-y-4 sm:space-y-6 min-w-0">
+                <OptimizedSequenceDisplay
+                  sequence={currentSequence}
+                  title={currentSequenceName}
+                  searchHistory={JSON.parse(localStorage.getItem('searchHistory') || '[]')}
+                />
+                
+                <SearchResults
+                  searchValue={searchValue}
+                  results={searchResults}
+                />
+              </div>
             </div>
           </div>
           
@@ -126,6 +130,7 @@ export default function Home() {
               }
             ]}
           />
+
         </div>
       </GradientBackground>
     </>

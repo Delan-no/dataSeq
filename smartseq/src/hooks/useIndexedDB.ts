@@ -115,6 +115,13 @@ export const useIndexedDB = () => {
   };
 
   const searchInAllSequences = (searchNum: number) => {
+    // Sauvegarder dans l'historique de recherche
+    const currentHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    if (!currentHistory.includes(searchNum)) {
+      const newHistory = [...currentHistory, searchNum].slice(-20); // Garder les 20 dernières recherches
+      localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+    }
+    
     return sequences
       .map(seq => {
         const index = seq.sequence.indexOf(searchNum);
