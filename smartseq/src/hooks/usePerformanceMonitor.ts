@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 interface PerformanceMetrics {
   renderTime: number;
@@ -29,6 +29,7 @@ export const usePerformanceMonitor = () => {
     return renderTime;
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateMetrics = useCallback((sequences: any[]) => {
     const totalElements = sequences.reduce((sum, seq) => sum + seq.sequence.length, 0);
     const isOptimized = totalElements > 1000 || sequences.some(seq => seq.sequence.length > 100);

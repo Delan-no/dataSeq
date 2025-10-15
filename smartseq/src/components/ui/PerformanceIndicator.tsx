@@ -2,11 +2,13 @@ import React from 'react';
 import { usePerformanceMonitor } from '../../hooks/usePerformanceMonitor';
 
 interface PerformanceIndicatorProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sequences: any[];
   className?: string;
 }
 
-export default function PerformanceIndicator({ sequences, className = '' }: PerformanceIndicatorProps) {
+// export default function PerformanceIndicator({ sequences, className = '' }: PerformanceIndicatorProps) {
+export default function PerformanceIndicator({ sequences}: PerformanceIndicatorProps) {
   const { metrics, updateMetrics, getPerformanceStatus, getOptimizationTips } = usePerformanceMonitor();
   
   // Mise à jour des métriques quand les séquences changent
@@ -17,15 +19,16 @@ export default function PerformanceIndicator({ sequences, className = '' }: Perf
   const { status, color } = getPerformanceStatus();
   const tips = getOptimizationTips();
 
-  const colorClasses = {
-    green: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border-green-300',
-    blue: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border-blue-300',
-    yellow: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 border-yellow-300',
-    red: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border-red-300'
-  };
+  // const colorClasses = {
+  //   green: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border-green-300',
+  //   blue: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border-blue-300',
+  //   yellow: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 border-yellow-300',
+  //   red: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border-red-300'
+  // };
 
   return (
-    <div className={`${colorClasses[color]} rounded-lg p-3 border ${className}`}>
+    // <div className={`${colorClasses[color]} rounded-lg p-3 border ${className}`}>
+    <div className=' rounded-lg p-3 border'>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 bg-${color}-500 rounded-full animate-pulse`}></div>
