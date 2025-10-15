@@ -221,7 +221,7 @@ const AppSidebar: React.FC = () => {
         <Link to="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-            <div className="text-blue-400 text-2xl font-bold">Ecole229</div>
+            <div className="text-blue-400 text-2xl font-bold">SeqBox</div>
               
             </>
           ) : (
