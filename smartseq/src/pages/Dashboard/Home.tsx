@@ -29,6 +29,7 @@ export default function Home() {
   } = useIndexedDB();
   
   const [searchValue, setSearchValue] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const { isOpen: isMobileModalOpen, openModal, closeModal } = useMobileModal();
   
