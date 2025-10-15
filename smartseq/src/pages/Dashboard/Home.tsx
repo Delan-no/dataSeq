@@ -1,23 +1,39 @@
 import { useState } from "react";
 import PageMeta from "../../components/common/PageMeta";
 import { useIndexedDB } from "../../hooks/useIndexedDB";
+import { useMobileModal } from "../../hooks/useMobileModal";
+import SequenceInput from "../../components/sequence/SequenceInput";
+import OptimizedSequenceDisplay from "../../components/sequence/OptimizedSequenceDisplay";
+import SequenceManager from "../../components/sequence/SequenceManager";
+import SearchBar from "../../components/search/SearchBar";
+import SearchResults from "../../components/search/SearchResults";
+import GradientBackground from "../../components/ui/GradientBackground";
+import FloatingActionButton from "../../components/ui/FloatingActionButton";
+import MobileSequenceModal from "../../components/mobile/MobileSequenceModal";
+
 
 export default function Home() {
-  const { sequences, currentSequenceId, setCurrentSequenceId, getCurrentSequence, createSequence, deleteSequence, addNumber, resetSequence, searchInAllSequences } = useIndexedDB();
-  const [inputValue, setInputValue] = useState("");
+  const { 
+    sequences, 
+    currentSequenceId, 
+    setCurrentSequenceId, 
+    getCurrentSequence, 
+    createSequence, 
+    deleteSequence, 
+    addNumber, 
+    resetSequence, 
+    searchInAllSequences,
+    updateNumberAt,
+    moveNumber,
+    removeNumberAt
+  } = useIndexedDB();
+  
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [newSequenceName, setNewSequenceName] = useState("");
+  const { isOpen: isMobileModalOpen, openModal, closeModal } = useMobileModal();
   
   const currentSequence = getCurrentSequence();
-
-  const handleAddNumber = () => {
-    const num = parseFloat(inputValue);
-    if (!isNaN(num)) {
-      addNumber(num);
-      setInputValue("");
-    }
-  };
+  const currentSequenceName = sequences.find(s => s.id === currentSequenceId)?.name || "Séquence";
 
   const handleSearch = (value: string) => {
     setSearchValue(value);
@@ -32,13 +48,6 @@ export default function Home() {
     }
   };
 
-  const handleCreateSequence = () => {
-    if (newSequenceName.trim()) {
-      createSequence(newSequenceName.trim());
-      setNewSequenceName("");
-    }
-  };
-
   const handleReset = () => {
     resetSequence();
     setSearchResults([]);
@@ -48,172 +57,121 @@ export default function Home() {
   return (
     <>
       <PageMeta
-        title="Séquences"
-        description="Gestion de séquences numériques"
+        title="SmartSeq - Séquences Intelligentes"
+        description="Application moderne de gestion de séquences numériques"
       />
-      <div className="min-h-screen bg-gray-50 p-3">
-        <div className="max-w-md mx-auto space-y-4">
+      
+      <GradientBackground>
+        <div className="min-h-screen w-full overflow-x-hidden">
+          <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8 max-w-7xl md:pt-4 pt-16">
+            {/* Header */}
+            <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2 sm:mb-4">
+                SmartSeq
+              </h1>
+              <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-300 max-w-xl lg:max-w-2xl mx-auto px-4">
+                Gérez vos séquences numériques avec élégance et efficacité
+              </p>
+            </div>
+
+          {/* Bouton mobile pour ouvrir le modal */}
+          <button
+            onClick={openModal}
+            className="md:hidden fixed bottom-6 right-6 z-50 bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white p-4 rounded-full shadow-2xl transition-all duration-200 transform hover:scale-110 active:scale-95"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+
+            {/* Layout principal */}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {/* Colonne gauche - Contrôles (cachée sur mobile) */}
+              <div className="hidden md:block xl:col-span-1 space-y-4 sm:space-y-6">
+                <SequenceManager
+                  sequences={sequences}
+                  currentSequenceId={currentSequenceId}
+                  onSequenceChange={setCurrentSequenceId}
+                  onCreateSequence={createSequence}
+                  onDeleteSequence={deleteSequence}
+                />
+                
+                <SequenceInput
+                  onAddNumber={addNumber}
+                  onReset={handleReset}
+                  currentSequence={currentSequence}
+                  onUpdateNumber={updateNumberAt}
+                  onMoveNumber={moveNumber}
+                  onRemoveNumber={removeNumberAt}
+                />
+              </div>
+
+              {/* Colonne droite - Affichage */}
+              <div className="xl:col-span-2 md:col-span-1 space-y-4 sm:space-y-6 min-w-0">
+                {/* Barre de recherche - visible sur toutes les tailles */}
+                <SearchBar
+                  onSearch={handleSearch}
+                  placeholder="Rechercher un nombre..."
+                />
+
+                <OptimizedSequenceDisplay
+                  sequence={currentSequence}
+                  title={currentSequenceName}
+                  searchHistory={JSON.parse(localStorage.getItem('searchHistory') || '[]')}
+                />
+                
+                <SearchResults
+                  searchValue={searchValue}
+                  results={searchResults}
+                />
+              </div>
+            </div>
+          </div>
           
-          {/* Header */}
-          <div className="text-center py-2">
-            <h1 className="text-xl font-medium text-gray-800">Séquences</h1>
-          </div>
-
-          {/* Sélection séquence */}
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <select
-              value={currentSequenceId}
-              onChange={(e) => setCurrentSequenceId(Number(e.target.value))}
-              className="w-full p-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:border-gray-400"
-            >
-              {sequences.map(seq => (
-                <option key={seq.id} value={seq.id}>{seq.name}</option>
-              ))}
-            </select>
-            
-            <div className="flex gap-2 mt-3">
-              <input
-                type="text"
-                value={newSequenceName}
-                onChange={(e) => setNewSequenceName(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleCreateSequence()}
-                placeholder="Nouvelle séquence"
-                className="flex-1 p-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:border-gray-400"
-              />
-              <button
-                onClick={handleCreateSequence}
-                className="px-4 py-3 bg-gray-800 text-white rounded-lg text-sm font-medium"
-              >
-                +
-              </button>
-            </div>
-            
-            {sequences.length > 1 && (
-              <button
-                onClick={() => deleteSequence(currentSequenceId)}
-                className="w-full mt-2 p-2 text-red-600 text-sm"
-              >
-                Supprimer cette séquence
-              </button>
-            )}
-          </div>
-
-          {/* Saisie nombre */}
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="flex gap-2">
-              <input
-                type="number"
-                step="0.1"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleAddNumber()}
-                placeholder="Nombre"
-                className="flex-1 p-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:border-gray-400"
-              />
-              <button
-                onClick={handleAddNumber}
-                className="px-6 py-3 bg-gray-800 text-white rounded-lg font-medium"
-              >
-                OK
-              </button>
-            </div>
-            
-            <button
-              onClick={handleReset}
-              className="w-full mt-3 p-2 text-gray-600 text-sm"
-            >
-              Vider la séquence
-            </button>
-          </div>
-
-          {/* Recherche */}
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <input
-              type="number"
-              step="0.1"
-              value={searchValue}
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Rechercher un nombre"
-              className="w-full p-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:border-gray-400"
+          {/* Bouton d'actions flottant (caché sur mobile) */}
+          <div className="hidden md:block">
+            <FloatingActionButton
+              actions={[
+                {
+                  icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>,
+                  label: "Nouvelle séquence",
+                  onClick: () => createSequence(`Séquence ${sequences.length + 1}`),
+                  color: "bg-green-500 hover:bg-green-600"
+                },
+                {
+                  icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>,
+                  label: "Réinitialiser",
+                  onClick: handleReset,
+                  color: "bg-red-500 hover:bg-red-600"
+                },
+                {
+                  icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
+                  label: "Statistiques",
+                  onClick: () => console.log('Statistiques'),
+                  color: "bg-purple-500 hover:bg-purple-600"
+                }
+              ]}
             />
           </div>
 
-          {/* Séquence actuelle */}
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="font-medium text-gray-800">
-                {sequences.find(s => s.id === currentSequenceId)?.name}
-              </h3>
-              <span className="text-sm text-gray-500">
-                {currentSequence.length}
-              </span>
-            </div>
-            
-            <div className="border border-gray-200 rounded-lg p-3 min-h-[80px] max-h-48 overflow-y-auto">
-              {currentSequence.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {currentSequence.map((num, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm"
-                    >
-                      {num}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-400 text-center text-sm mt-6">
-                  Aucun nombre
-                </p>
-              )}
-            </div>
-          </div>
+          {/* Modal mobile */}
+          <MobileSequenceModal
+            isOpen={isMobileModalOpen}
+            onClose={closeModal}
+            sequences={sequences}
+            currentSequenceId={currentSequenceId}
+            onSequenceChange={setCurrentSequenceId}
+            onCreateSequence={createSequence}
+            onDeleteSequence={deleteSequence}
+            onAddNumber={addNumber}
+            onReset={handleReset}
+            onUpdateNumber={updateNumberAt}
+            onMoveNumber={moveNumber}
+            onRemoveNumber={removeNumberAt}
+          />
 
-          {/* Résultats recherche */}
-          {searchValue && (
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <h3 className="font-medium text-gray-800 mb-3">
-                Recherche: {searchValue}
-              </h3>
-              
-              {searchResults.length > 0 ? (
-                <div className="space-y-3">
-                  {searchResults.map((result) => (
-                    <div key={result.sequence.id} className="border border-gray-200 rounded-lg p-3">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="font-medium text-gray-800 text-sm">
-                          {result.sequence.name}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          Position {result.firstIndex + 1}
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {result.subsequence.map((num: number, index: number) => (
-                          <span
-                            key={index}
-                            className={`px-2 py-1 rounded text-xs ${
-                              index === 0
-                                ? 'bg-gray-800 text-white font-medium'
-                                : 'bg-gray-100 text-gray-600'
-                            }`}
-                          >
-                            {num}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-400 text-center text-sm">
-                  Aucun résultat
-                </p>
-              )}
-            </div>
-          )}
         </div>
-      </div>
+      </GradientBackground>
     </>
   );
 }

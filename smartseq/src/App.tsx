@@ -6,17 +6,21 @@ import Calendar from "./pages/Calendar";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
+import SequencesPage from "./pages/Sequences/SequencesPage";
 import { AuthProvider } from "./context/AuthContext";
+import ToastProvider from "./components/ui/ToastProvider";
 
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
+      <ToastProvider>
+        <Router>
         <ScrollToTop />
         <Routes>
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
             <Route index path="/" element={<Home />} />
+            <Route path="/sequences" element={<SequencesPage />} />
             <Route path="/calendar" element={<Calendar />} />
           </Route>
 
@@ -27,7 +31,8 @@ export default function App() {
           {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
+        </Router>
+      </ToastProvider>
     </AuthProvider>
   );
 }
