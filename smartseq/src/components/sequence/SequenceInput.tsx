@@ -5,9 +5,13 @@ interface SequenceInputProps {
   onAddNumber: (num: number) => void;
   onReset: () => void;
   disabled?: boolean;
+  currentSequence?: number[];
+  onUpdateNumber?: (index: number, newValue: number) => void;
+  onMoveNumber?: (fromIndex: number, toIndex: number) => void;
+  onRemoveNumber?: (index: number) => void;
 }
 
-export default function SequenceInput({ onAddNumber, onReset, disabled }: SequenceInputProps) {
+export default function SequenceInput({ onAddNumber, onReset, disabled, currentSequence = [], onUpdateNumber, onMoveNumber, onRemoveNumber }: SequenceInputProps) {
   const [inputValue, setInputValue] = useState('');
   const { success, error } = useToastContext();
 
@@ -60,8 +64,7 @@ export default function SequenceInput({ onAddNumber, onReset, disabled }: Sequen
             <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            <span className="hidden sm:inline">Ajouter</span>
-            <span className="sm:hidden">+</span>
+            <span>Ajouter</span>
           </button>
           
           <button
@@ -76,6 +79,75 @@ export default function SequenceInput({ onAddNumber, onReset, disabled }: Sequen
           </button>
         </div>
       </form>
+      
+      {/* Affichage de la séquence en temps réel */}
+      {currentSequence.length > 0 && (
+        <div className="mt-4 p-3 bg-gray-50/50 dark:bg-gray-700/50 rounded-xl border border-gray-200/50 dark:border-gray-600/50">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+              Nombres ajoutés ({currentSequence.length})
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
+            {currentSequence.map((num, index) => (
+              <div key={index} className="relative group">
+                <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-semibold shadow-sm hidden md:inline-block">
+                  {num}
+                </span>
+                
+                {/* Version éditable pour mobile */}
+                <div className="md:hidden bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-semibold shadow-sm relative min-w-[50px] text-center">
+                  {num}
+                  
+                  {onUpdateNumber && onRemoveNumber && (
+                    <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                      <button
+                        onClick={() => {
+                          const newValue = prompt('Nouveau nombre:', num.toString());
+                          if (newValue && !isNaN(parseFloat(newValue))) {
+                            onUpdateNumber(index, parseFloat(newValue));
+                          }
+                        }}
+                        className="w-5 h-5 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full flex items-center justify-center text-xs shadow-lg"
+                      >
+                        ✎
+                      </button>
+                      <button
+                        onClick={() => onRemoveNumber(index)}
+                        className="w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs shadow-lg"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
+                  
+                  {onMoveNumber && (
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                      {index > 0 && (
+                        <button
+                          onClick={() => onMoveNumber(index, index - 1)}
+                          className="w-5 h-5 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-xs shadow-lg"
+                        >
+                          ←
+                        </button>
+                      )}
+                      {index < currentSequence.length - 1 && (
+                        <button
+                          onClick={() => onMoveNumber(index, index + 1)}
+                          className="w-5 h-5 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-xs shadow-lg"
+                        >
+                          →
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

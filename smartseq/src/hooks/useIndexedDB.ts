@@ -140,6 +140,33 @@ export const useIndexedDB = () => {
     return sequences.find(seq => seq.id === currentSequenceId)?.sequence || [];
   };
 
+  const updateNumberAt = (index: number, newValue: number) => {
+    const currentSeq = sequences.find(seq => seq.id === currentSequenceId);
+    if (!currentSeq) return;
+    
+    const newSequence = [...currentSeq.sequence];
+    newSequence[index] = newValue;
+    updateSequence(currentSequenceId, newSequence);
+  };
+
+  const moveNumber = (fromIndex: number, toIndex: number) => {
+    const currentSeq = sequences.find(seq => seq.id === currentSequenceId);
+    if (!currentSeq) return;
+    
+    const newSequence = [...currentSeq.sequence];
+    const [movedItem] = newSequence.splice(fromIndex, 1);
+    newSequence.splice(toIndex, 0, movedItem);
+    updateSequence(currentSequenceId, newSequence);
+  };
+
+  const removeNumberAt = (index: number) => {
+    const currentSeq = sequences.find(seq => seq.id === currentSequenceId);
+    if (!currentSeq) return;
+    
+    const newSequence = currentSeq.sequence.filter((_, i) => i !== index);
+    updateSequence(currentSequenceId, newSequence);
+  };
+
   return {
     sequences,
     currentSequenceId,
@@ -149,6 +176,9 @@ export const useIndexedDB = () => {
     deleteSequence,
     addNumber,
     resetSequence,
-    searchInAllSequences
+    searchInAllSequences,
+    updateNumberAt,
+    moveNumber,
+    removeNumberAt
   };
 };

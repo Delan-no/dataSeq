@@ -43,10 +43,6 @@ export default function SequenceManager({
   };
 
   const handleDeleteClick = (sequenceId: number) => {
-    if (sequences.length <= 1) {
-      error('Impossible de supprimer la dernière séquence');
-      return;
-    }
     setSequenceToDelete(sequenceId);
     setShowDeleteConfirm(true);
   };
@@ -79,18 +75,23 @@ export default function SequenceManager({
           <select
             value={currentSequenceId}
             onChange={(e) => onSequenceChange(Number(e.target.value))}
-            className="flex-1 min-w-0 px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:border-purple-500 focus:bg-white dark:focus:bg-gray-600 transition-all duration-200 text-gray-800 dark:text-white text-sm sm:text-base truncate"
+            disabled={sequences.length === 0}
+            className="flex-1 min-w-0 px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:border-purple-500 focus:bg-white dark:focus:bg-gray-600 transition-all duration-200 text-gray-800 dark:text-white text-sm sm:text-base truncate disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {sequences.map(seq => (
-              <option key={seq.id} value={seq.id}>
-                {seq.name} ({seq.sequence.length})
-              </option>
-            ))}
+            {sequences.length === 0 ? (
+              <option>Aucune séquence</option>
+            ) : (
+              sequences.map(seq => (
+                <option key={seq.id} value={seq.id}>
+                  {seq.name} ({seq.sequence.length})
+                </option>
+              ))
+            )}
           </select>
           
           <button
             onClick={() => handleDeleteClick(currentSequenceId)}
-            disabled={sequences.length <= 1}
+            disabled={sequences.length === 0}
             className="bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none flex-shrink-0"
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

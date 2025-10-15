@@ -31,7 +31,7 @@ export default function ToastProvider({ children }: ToastProviderProps) {
       {children}
       
       {/* Container des toasts */}
-      <div className="fixed top-4 right-4 z-50 space-y-2">
+      <div className="fixed top-4 right-4 z-[9999] space-y-2 md:top-4 md:right-4 top-20 right-4">
         {toasts.map((toast) => (
           <Toast
             key={toast.id}
