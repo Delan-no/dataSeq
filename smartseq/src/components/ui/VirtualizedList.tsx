@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from 'react';
 
 interface VirtualizedListProps {
   items: number[];
@@ -10,7 +9,6 @@ interface VirtualizedListProps {
 
 export default function VirtualizedList({ 
   items, 
-  itemHeight, 
   containerHeight, 
   searchHistory,
   className = '' 

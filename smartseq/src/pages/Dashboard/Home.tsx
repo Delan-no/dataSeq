@@ -10,7 +10,6 @@ import SearchResults from "../../components/search/SearchResults";
 import GradientBackground from "../../components/ui/GradientBackground";
 import FloatingActionButton from "../../components/ui/FloatingActionButton";
 import MobileSequenceModal from "../../components/mobile/MobileSequenceModal";
-import InstallButton from "../../components/ui/InstallButton";
 
 
 export default function Home() {
@@ -30,6 +29,7 @@ export default function Home() {
   } = useIndexedDB();
   
   const [searchValue, setSearchValue] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const { isOpen: isMobileModalOpen, openModal, closeModal } = useMobileModal();
   

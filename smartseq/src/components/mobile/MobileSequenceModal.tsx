@@ -1,4 +1,3 @@
-import React from 'react';
 import SequenceManager from '../sequence/SequenceManager';
 import SequenceInput from '../sequence/SequenceInput';
 import EditableSequence from './EditableSequence';
