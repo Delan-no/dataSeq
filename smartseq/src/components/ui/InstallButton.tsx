@@ -1,15 +1,15 @@
-import React from 'react';
-import { usePWA } from '../../hooks/usePWA';
+// import React from 'react';
+// import { usePWA } from '../../hooks/usePWA';
 
 export default function InstallButton() {
-  const { isInstallable, isInstalled, installApp } = usePWA();
+  // const { isInstallable, isInstalled, installApp } = usePWA();
 
   // Toujours afficher pour test
   // if (isInstalled || !isInstallable) return null;
 
   return (
     <button
-      onClick={installApp}
+      // onClick={installApp}
       className="fixed top-4 left-4 z-50 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 flex items-center gap-2 text-sm font-semibold"
     >
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
