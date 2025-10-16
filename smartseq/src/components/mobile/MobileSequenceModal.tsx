@@ -52,7 +52,7 @@ export default function MobileSequenceModal({
       />
       
       {/* Modal */}
-      <div className="absolute inset-x-3 top-3 bottom-3 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden flex flex-col modal-enter">
+      <div className="absolute inset-x-2 top-2 bottom-2 xs:inset-x-3 xs:top-3 xs:bottom-3 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl xs:rounded-3xl shadow-2xl overflow-hidden flex flex-col modal-enter">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-600">
           <div className="flex items-center gap-3">

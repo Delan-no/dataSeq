@@ -116,16 +116,18 @@ export default function Home() {
                   onSearch={handleSearch}
                   placeholder="Rechercher un nombre..."
                 />
+                
+                {/* Résultats de recherche - toujours en haut */}
+                <SearchResults
+                  searchValue={searchValue}
+                  results={searchResults}
+                />
 
+                {/* Affichage de la séquence - avec accordéon sur mobile */}
                 <OptimizedSequenceDisplay
                   sequence={currentSequence}
                   title={currentSequenceName}
                   searchHistory={JSON.parse(localStorage.getItem('searchHistory') || '[]')}
-                />
-                
-                <SearchResults
-                  searchValue={searchValue}
-                  results={searchResults}
                 />
               </div>
             </div>
